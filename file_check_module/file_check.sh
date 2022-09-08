@@ -4,6 +4,8 @@ echo 'Checking for new files...'
 search_dir=`ls $1/*`
 correct_ext=()
 processed= '_processed'
+output_filepath='./output'
+location_data_filepath='data\location_data\Areas_in_blore.csv'
 
 for file in $search_dir
 do
@@ -15,7 +17,7 @@ do
          if [[ `wc -l $file` > 0 ]]
          then
 
-            echo "here is where data_check.py is executed with the related file."
+            python main.py $file $location_data_filepath $output_filepath
 
             mv $file $file"_processed.csv"
             correct_ext+=($file)
