@@ -5,7 +5,7 @@ search_dir=`ls $1/*`
 correct_ext=()
 processed= '_processed'
 output_filepath='./output'
-location_data_filepath='data\location_data\Areas_in_blore.csv'
+location_data_filepath='location_data\Areas_in_blore.csv'
 
 for file in $search_dir
 do
