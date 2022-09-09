@@ -2,6 +2,7 @@
 
 This projects it meant to create a process that consume data files, check through that files if they are already processed.
 After that it going to clean the data an write it down as _out/_bad data csv depending if the location column has a valid value.
+The last step is perfom some data validations using Pydeequ API (built on Spark).
 
 ## Technologies
 
