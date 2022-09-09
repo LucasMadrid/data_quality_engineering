@@ -1,4 +1,3 @@
-from traceback import print_tb
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, regexp_extract, regexp_replace, split, concat_ws
 from datetime import datetime
@@ -9,6 +8,19 @@ import data_validation
 
 
 def init_spark_session():
+    """
+    Initialize and Get an spark session and initialize pydeequ 
+    package to validate data.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    SparkSession
+        a spark session initialized ready to read data.
+    """
     spark = (SparkSession
         .builder
         .config("spark.jars.packages", pydeequ.deequ_maven_coord)
@@ -18,6 +30,20 @@ def init_spark_session():
     return spark
 
 def read_file_from_args():
+  """
+  Get filepaths from args
+
+  Parameters
+  ----------
+  None
+  
+  Returns
+  -------
+  String
+      filepath: the dataset filepath to be processed and cleaned.
+      location_data: the location dataset to load it and validate against the dataset to be cleaned.
+      output_filepath: the output filepath to write the output dataset.
+  """
   
   print("Args: ", sys.argv[1:])
   filepath = ".\\data\\{}".format(sys.argv[1])
@@ -28,6 +54,27 @@ def read_file_from_args():
 
 
 def data_cleaning(df, df_location, output_filepath):
+
+  """
+  Get filepaths from args
+
+  Parameters
+  ----------
+  df: Spark DataFrame
+    Dataset to be cleaned.
+
+  df_location: Spark Dataframe 
+    Dataset with location data to use as a location column validation of 'df' dataframe.
+
+  output_filepath: str
+    The output filepath to write the output dataset.
+
+  Returns
+  -------
+  Spark DataFrame
+      df_cleaned: A Spark DataFrame with the dataset already prepared and cleaned.
+  """
+
 
   #Creating epoch for output filename
   created_timestamp = int((datetime.now() - datetime(1970,1,1)).total_seconds())
@@ -164,6 +211,7 @@ if __name__ == "__main__":
   df_cleaned = data_cleaning(df=df, df_location=df_location, output_filepath=output_filepath)
 
   print('Data Cleaning process finished...')
+
   print('Starting Data Validation...')
   data_validation.validate_data(df=df_cleaned)
 
