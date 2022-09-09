@@ -1,6 +1,8 @@
 from traceback import print_tb
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, regexp_extract, regexp_replace, split, concat_ws
+from datetime import datetime
+import time 
 import sys
 import os
 import data_validation
@@ -26,6 +28,9 @@ def read_file_from_args():
 
 
 def data_cleaning(df, df_location, output_filepath):
+
+  #Creating epoch for output filename
+  created_timestamp = int((datetime.now() - datetime(1970,1,1)).total_seconds())
 
   #Dropping unused columns
   df_drop_columns = df.drop('online_order', 'book_table', 'approx_cost(for two people)', 'menu_item', 'listed_in(type)', 'listed_in(city)')
@@ -103,7 +108,7 @@ def data_cleaning(df, df_location, output_filepath):
 
   #Writting 'good' data to output/ folder
   print('Writting "good" data to {0}'.format(output_filepath))
-  df_columns_sorted.toPandas().to_csv('{0}/record_out.csv'.format(output_filepath), index=False)
+  df_columns_sorted.toPandas().to_csv('{0}/record_{1}_out.csv'.format(output_filepath, created_timestamp), index=False)
 
 
   #Getting bad data (those that didn't pass the initials checks like valid location)
@@ -130,7 +135,7 @@ def data_cleaning(df, df_location, output_filepath):
                                 col('review_list'))
   
   print('Writting "bad" data to {0}'.format(output_filepath))
-  df_bad_data.toPandas().to_csv("{0}/record_bad.csv".format(output_filepath), index=False)
+  df_bad_data.toPandas().to_csv("{0}/record_{1}_bad.csv".format(output_filepath, created_timestamp), index=False)
 
   return df_columns_sorted
 
@@ -161,3 +166,5 @@ if __name__ == "__main__":
   print('Data Cleaning process finished...')
   print('Starting Data Validation...')
   data_validation.validate_data(df=df_cleaned)
+
+  print('Done...')
