@@ -18,6 +18,11 @@ The last step is perfom some data validations using Pydeequ API (built on Spark)
 3. ```pipenv install``` is going to install all dependencies in pipfiles.
 4. ```./file_check.sh``` check file on ./data folder and execute python script to clean and validate unprocessed data files.
 
+
+#### Post Script
+There is a Jupyter Notebook called ```dev_data_check.ipynb``` where I develop every step and test every transformation [Dev purpose]
+
+
 ### Process Diagram
 
 ![Diagram](./assets/data_qa_engineering.png)
